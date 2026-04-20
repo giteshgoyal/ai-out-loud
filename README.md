@@ -1,129 +1,151 @@
-# 🚀 Learning LLM Engineering in Public
+# 🚀 Building LLM Systems That Actually Work (In Public)
 
 ## Why this repository exists
 
-Nobody tells you this:
+Most AI systems don’t fail because of the model.
 
-> **Knowing AI ≠ Building with AI**
+They fail because of **infrastructure**.
 
-You can read papers, watch talks, and try out tools — and still struggle when you try to build something real.
+> Latency spikes  
+> Costs explode  
+> Systems break under load  
 
-I learned this the hard way.
+And most people building with AI don’t know why.
 
-When I started building actual systems (RAG pipelines, agents, structured outputs), things broke in ways tutorials never mention:
-- Outputs looked correct but were wrong  
-- Retrieval failed silently  
-- Chunking decisions changed everything  
-- Prompts that worked yesterday stopped working today  
+Because they skip the foundations.
 
-There’s a massive gap between:
-> **“It works in a demo”**  
-and  
-> **“It works on real-world data”**
+They:
+- Call APIs  
+- Use frameworks  
+- Ship demos  
 
-This repository exists to explore that gap — honestly and practically.
+But never understand what’s happening under the hood.
+
+---
+
+## What I’m doing differently
+
+I’m going back to first principles.
+
+Starting from scratch to deeply understand:
+
+- Why inference is slow  
+- Why LLM costs blow up  
+- What breaks under concurrency  
+- How to make open-source models production-ready  
+
+This is a **learning-in-public journey into LLM systems engineering**.
 
 ---
 
 ## What this repo is (and is not)
 
 ### ✅ This repo is:
-- A **learning-in-public journey**
-- Focused on **real implementations**
-- Full of **experiments, failures, and fixes**
-- Designed for **developers building with LLMs**
+- A **build-in-public journey**
+- Focused on **LLM infrastructure & performance**
+- Full of **experiments, benchmarks, and failures**
+- Centered around **open-source models**
 
 ### ❌ This repo is NOT:
-- A collection of generic tutorials  
-- A “top 10 prompts” type resource  
-- Polished theory without real-world validation  
+- Prompt engineering hacks  
+- “Top 10 tools” lists  
+- Surface-level tutorials  
 
 ---
 
-## What you’ll find here
+## The roadmap
 
-Each week, I explore a specific part of LLM engineering:
+I’m progressing step by step:
 
-### 🔹 Running LLMs
-- APIs vs local models  
-- Latency, cost, reliability trade-offs  
+### 🔹 Foundations
+- Python fundamentals  
+- Memory & data handling  
+- Async programming & concurrency  
 
-### 🔹 Prompt Engineering
-- What actually works in practice  
-- Structured outputs and failure cases  
+### 🔹 Inference Systems
+- Running LLMs locally  
+- vLLM / llama.cpp / inference engines  
+- Latency & throughput benchmarking  
 
-### 🔹 RAG (Retrieval-Augmented Generation)
-- Vector stores  
-- Chunking strategies (the part everyone skips)  
-- Why RAG pipelines fail  
+### 🔹 Optimization
+- Quantization (GGUF, GPTQ, AWQ)  
+- Model compression techniques  
+- Cost vs performance trade-offs  
 
-### 🔹 Agents
-- Building with frameworks like `LangGraph`, `CrewAI`, etc.  
-- Multi-step reasoning systems  
+### 🔹 Fine-tuning & Alignment
+- LoRA / PEFT  
+- Instruction tuning  
+- Alignment challenges  
+
+### 🔹 Evaluation
+- Measuring LLM performance properly  
+- Benchmarking frameworks  
+- Failure case analysis  
+
+### 🔹 Agentic Systems
+- Tool use  
+- Multi-step reasoning  
+- Reliability challenges in agents  
 
 ### 🔹 Production Systems
-- Deployment challenges  
-- Reliability issues  
-- Security considerations  
+- Serving architectures  
+- Scaling under load  
+- Observability & reliability  
 
 ---
 
 ## How to use this repo
 
-Each folder represents a **week of learning**:
+Each module contains:
 
-- 📓 Jupyter notebooks → experiments & benchmarks  
-- 📝 Markdown files → insights & breakdowns  
-- ⚙️ Utils → reusable components  
+- 📓 Experiments → benchmarks & tests  
+- 📝 Notes → what worked / what failed  
+- ⚙️ Code → reusable building blocks  
 
 You can:
-- Run notebooks to reproduce results  
-- Use code in your own projects  
-- Learn from mistakes (this is the most valuable part)
+- Reproduce results  
+- Learn from real failures  
+- Use components in your own systems  
 
 ---
 
 ## My approach
 
-I follow a simple rule:
+Simple rule:
 
-> **Document immediately after solving a problem**
-
-No polishing. No rewriting history.
+> **If I struggle with something, I document it.**
 
 Each entry captures:
 - What broke  
+- Why it broke  
 - What I tried  
-- What didn’t work  
-- What finally worked  
+- What actually worked  
+
+No hype. No shortcuts.
 
 ---
 
 ## Who this is for
 
 This repo is for you if:
-- You’re a **developer moving into AI**
-- You’ve tried tutorials but things break in real use
-- You want **practical, production-focused insights**
+
+- You want to go beyond demos  
+- You care about **performance, cost, and reliability**  
+- You’re building **real AI systems**  
 
 ---
 
 ## Follow the journey
 
-Follow me on:  
-
-- 👉 Newsletter link: https://aioutloud.substack.com/
-- 👉 Linkedin: https://www.linkedin.com/in/gitesh-goyal/
+- 👉 Newsletter: https://openinference.substack.com/  
+- 👉 LinkedIn: https://www.linkedin.com/in/gitesh-goyal/
+-  👉 X/Twitter: @goyal_gitesh
 
 ---
 
 ## Final thought
 
-If you’re starting out, remember:
-
 > Running an LLM is easy.  
-> Building something reliable with it is not.
+> Making it fast, cheap, and reliable is the real challenge.
 
-This repo is about crossing that gap.
-
----
+That’s what this repo is about.
