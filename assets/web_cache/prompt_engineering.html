@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><title>Prompt Engineering</title>
+<meta name="source-url" content="https://en.wikipedia.org/wiki/Prompt_engineering">
+</head><body>
+<nav>Wikipedia navigation | Search | Random article</nav>
+<h1>Prompt Engineering</h1>
+<div id="content">Prompt engineering is the practice of designing and refining input prompts to
+large language models to elicit desired outputs. It has become a critical skill
+for building reliable AI-powered applications.
+
+Key prompting techniques:
+- Zero-shot prompting: Ask the model directly without examples. Effective for
+  well-understood tasks where the model has strong prior training signal.
+- Few-shot prompting: Include 2–5 examples of input/output pairs in the prompt.
+  Dramatically improves performance on niche formats and tasks.
+- Chain-of-thought (CoT): Ask the model to reason step by step before giving
+  a final answer. Substantially improves accuracy on multi-step reasoning tasks.
+- System prompts: Instructions placed before the conversation that establish role,
+  behavior, and constraints. Critical for production RAG to define citation format,
+  tone, and out-of-scope behavior.
+
+In RAG systems, prompt engineering governs how retrieved context is presented to
+the model, how citations are formatted, how the model should handle contradictory
+context, and what to say when the answer is not in the retrieved documents.
+
+The 'lost in the middle' problem — where LLMs underperform on context placed in
+the middle of a long prompt — is a key concern in RAG prompt design. Best practice
+is to place the most relevant chunks at the beginning and end of the context window.</div>
+<footer>Wikipedia | CC BY-SA | Privacy Policy | Contact</footer>
+</body></html>

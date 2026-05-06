@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html><head><title>Semantic Search</title>
+<meta name="source-url" content="https://en.wikipedia.org/wiki/Semantic_search">
+</head><body>
+<nav>Wikipedia navigation | Search | Random article</nav>
+<h1>Semantic Search</h1>
+<div id="content">Semantic search is an information retrieval approach that focuses on understanding
+the meaning and intent behind a query rather than relying on keyword matching alone.
+
+Traditional keyword search systems like BM25 match query terms against document
+terms, missing synonyms, paraphrases, and conceptual relationships. Semantic
+search systems instead encode both the query and documents as dense vectors in a
+shared embedding space, where proximity corresponds to semantic similarity.
+
+The shift from keyword to semantic search was enabled by large pre-trained language
+models that produce high-quality sentence and document embeddings. Models such as
+Sentence-BERT, E5, and OpenAI's text-embedding-3 series encode text into fixed-size
+vectors that capture deep semantic relationships.
+
+In production RAG systems, hybrid search — combining dense semantic search with
+sparse keyword search — typically outperforms either approach alone. Reciprocal
+Rank Fusion (RRF) is the standard method for merging ranked lists from both systems.
+
+Key evaluation datasets for semantic search include BEIR (Benchmarking IR),
+MS MARCO, and Natural Questions. State-of-the-art dense retrievers achieve over
+90% recall@100 on these benchmarks.</div>
+<footer>Wikipedia | CC BY-SA | Privacy Policy | Contact</footer>
+</body></html>

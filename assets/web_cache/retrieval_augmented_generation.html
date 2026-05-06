@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><title>Retrieval-Augmented Generation</title>
+<meta name="source-url" content="https://en.wikipedia.org/wiki/Retrieval-augmented_generation">
+</head><body>
+<nav>Wikipedia navigation | Search | Random article</nav>
+<h1>Retrieval-Augmented Generation</h1>
+<div id="content">Retrieval-augmented generation (RAG) is a technique for enhancing the accuracy
+and reliability of generative AI models by grounding them on external knowledge
+sources retrieved at inference time.
+
+RAG combines two components: a retrieval module that searches a knowledge base
+for relevant documents given a query, and a generative module (typically a large
+language model) that synthesizes an answer conditioned on both the query and the
+retrieved context.
+
+The technique was introduced in a 2020 paper by Lewis et al. at Facebook AI Research.
+It addressed a key limitation of LLMs: factual knowledge is frozen at training time,
+causing models to produce outdated or hallucinated information when asked about
+recent events or specialized domain knowledge.
+
+Key advantages of RAG over fine-tuning:
+- Knowledge can be updated by updating the retrieval index, without retraining the model.
+- Sources can be cited, enabling attribution and auditability.
+- Domain adaptation is cheaper — curating a retrieval corpus is far less expensive
+  than fine-tuning a large model.
+
+Variants include Naive RAG (basic retrieve-then-generate), Advanced RAG (query
+transformation, reranking), Modular RAG (configurable pipeline components), and
+Agentic RAG (LLM decides when and what to retrieve).
+
+Common evaluation metrics include faithfulness (does the answer follow from the
+retrieved context?), answer relevance, context precision, and context recall.
+RAGAS is the most widely adopted evaluation framework.</div>
+<footer>Wikipedia | CC BY-SA | Privacy Policy | Contact</footer>
+</body></html>

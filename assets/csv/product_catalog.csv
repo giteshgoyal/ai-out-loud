@@ -1,0 +1,13 @@
+id,name,category,description,price_usd,in_stock,tags,rating,review_count
+1,Neural Embedder Pro,Software,"Enterprise-grade embedding API supporting 50+ languages. Outputs 1536-dim vectors. Latency <50ms p99. Supports batch and streaming modes.",299.00,true,"nlp,ml,api",4.8,1247
+2,VectorStore Cloud,Database,"Managed vector database with automatic sharding. Supports HNSW and IVF-PQ indexes. 99.9% SLA. 100M vectors on entry tier.",149.00,true,"database,vector,cloud",4.6,834
+3,RAG Evaluator Kit,Tooling,"Automated evaluation suite for RAG pipelines. Includes faithfulness, relevance, and context recall metrics out of the box.",79.00,true,"eval,rag,testing",4.7,521
+4,Document Parser Plus,Tooling,"Handles PDF, Word, HTML, and scanned documents. Layout-aware extraction with table detection. Outputs clean markdown.",49.00,true,"parsing,pdf,ocr",4.5,1089
+5,Reranker Turbo,Model,"Cross-encoder reranking model. 2× better precision than BM25. Adds <80ms latency. Supports custom domain fine-tuning.",199.00,true,"reranking,ml,retrieval",4.9,312
+6,Chunker Smart,Library,"Semantic chunker with boundary detection. Supports fixed-size, recursive, and topic-based strategies. Python-first.",0.00,true,"chunking,nlp,python",4.4,2103
+7,Observability Hub,Platform,"Full-stack RAG observability. Traces every query, retrieval, and generation. Latency breakdown, token cost, hallucination scoring.",129.00,true,"monitoring,observability,devops",4.6,445
+8,Hybrid Search Engine,Database,"Combines dense and sparse retrieval with RRF fusion. Outperforms pure dense by 18% on BEIR benchmark.",399.00,false,"search,hybrid,retrieval",4.8,167
+9,,,Incomplete row — missing name and category,,,,,
+10,Context Window Manager,Library,"Dynamically manages context assembly. Handles lost-in-middle, citation tracking, and token budgeting automatically.",0.00,true,"prompting,context,python",4.3,678
+11,Multi-modal Embedder,Model,"Embed text and images in a shared vector space. Based on CLIP architecture. Supports batch image ingestion.",349.00,true,"multimodal,vision,embeddings",4.7,234
+12,Query Transformer,Library,"HyDE, multi-query, step-back, and decomposition strategies. Plug-and-play with any retriever.",0.00,true,"query,rag,python",4.5,891

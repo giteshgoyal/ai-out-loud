@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAG Stage 1 — Ingestion Analysis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;
+     background:#f8f7f4;color:#2c2c2a;line-height:1.6}
+.page{max-width:980px;margin:0 auto;padding:24px 20px}
+.rpt-hdr{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;
+          padding:22px 28px;margin-bottom:14px}
+.rpt-title{font-size:19px;font-weight:600;margin-bottom:3px}
+.rpt-meta{font-size:12px;color:#888780}
+.sec{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;
+     padding:20px 24px;margin-bottom:12px}
+.sec-title{font-size:15px;font-weight:600;margin-bottom:3px}
+.sec-sub{font-size:12px;color:#888780;margin-bottom:14px}
+.sec-note{font-size:12px;font-weight:500;color:#5f5e5a;margin-bottom:7px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat-card{background:#f8f7f4;border-radius:8px;padding:14px 16px}
+.stat-label{font-size:11px;color:#888780;margin-bottom:3px;
+            text-transform:uppercase;letter-spacing:.04em}
+.stat-value{font-size:22px;font-weight:600}
+.stat-sub{font-size:11px;color:#888780;margin-top:2px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.chart{margin-bottom:8px}
+.chart-title{font-size:11px;color:#888780;margin-bottom:8px;font-weight:500;
+             text-transform:uppercase;letter-spacing:.04em}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.bar-label{font-size:12px;color:#5f5e5a;width:110px;flex-shrink:0;
+           text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;background:#f1efe8;border-radius:4px;height:13px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-val{font-size:12px;color:#2c2c2a;font-weight:500;min-width:50px;text-align:right}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+th{background:#f8f7f4;padding:7px 10px;text-align:left;font-weight:500;
+   border-bottom:0.5px solid #d3d1c7;color:#5f5e5a}
+td{padding:6px 10px;border-bottom:0.5px solid #f1efe8;
+   max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ok-block{padding:9px 14px;border-radius:8px;font-size:13px;
+          background:#EAF3DE;color:#3B6D11}
+.warn-block{padding:9px 14px;border-radius:8px;font-size:13px;
+            background:#FAEEDA;color:#633806}
+.info-block{padding:9px 14px;border-radius:8px;font-size:13px;
+            background:#E6F1FB;color:#0C447C;margin-bottom:8px}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.insight{font-size:12px;background:#f8f7f4;border-radius:6px;
+         padding:10px 12px;color:#5f5e5a;margin-top:10px;line-height:1.6}
+.findings{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.findings li{font-size:13px;padding:10px 14px;background:#f8f7f4;
+             border-radius:8px;line-height:1.5}
+code{background:#f1efe8;padding:1px 5px;border-radius:4px;
+     font-family:monospace;font-size:12px}
+.note{font-size:11px;color:#888780;margin-top:5px}
+/* ── Preview cards ── */
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pcard{border:0.5px solid #d3d1c7;border-radius:10px;overflow:hidden}
+.pcard-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px}
+.pcard-badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.pcard-name{font-size:12px;color:#5f5e5a;flex:1;
+            overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard-meta{padding:0 14px 6px;display:flex;flex-wrap:wrap;gap:5px}
+.pcard-pill{font-size:11px;padding:2px 8px;border-radius:20px;
+            background:#f1efe8;color:#5f5e5a}
+.pcard-content{margin:0 14px 12px;padding:8px 10px;background:#f8f7f4;
+               border-radius:6px;font-size:11px;font-family:monospace;
+               color:#444441;white-space:pre-wrap;word-break:break-word;
+               max-height:120px;overflow:hidden;line-height:1.5}
+.pcard-img-inject{margin:0 14px 12px;padding:6px 10px;background:#EAF3DE;
+                  border-radius:6px;font-size:11px;font-family:monospace;
+                  color:#3B6D11;white-space:pre-wrap;word-break:break-word}
+.pcard-meta-keys{margin:0 14px 10px;font-size:11px;color:#888780}
+</style></head><body><div class="page">
+
+<div class="rpt-hdr">
+  <div class="rpt-title">RAG Stage 1 — Ingestion Analysis Report</div>
+  <div class="rpt-meta">
+    2026-05-06 05:13 UTC ·
+    107 docs · 6 source types ·
+    PDF image strategy: <code>none</code> ·
+    pipeline: <code>rag_stage1_ingestion_pipeline.py</code>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">Pipeline Summary</div>
+  <div class="sec-sub">High-level metrics across all ingested sources</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Total documents</div><div class="stat-value" style="color:#1D9E75">107</div></div>
+    <div class="stat-card"><div class="stat-label">Estimated tokens</div><div class="stat-value" style="color:#534AB7">140,082</div><div class="stat-sub">~4 chars/token</div></div>
+    <div class="stat-card"><div class="stat-label">Projected chunks</div><div class="stat-value" style="color:#185FA5">274</div><div class="stat-sub">at 512-token size</div></div>
+    <div class="stat-card"><div class="stat-label">Duplicates</div><div class="stat-value" style="color:#1D9E75">0</div><div class="stat-sub">doc_id collisions</div></div>
+    <div class="stat-card"><div class="stat-label">Metadata issues</div><div class="stat-value" style="color:#1D9E75">0</div><div class="stat-sub">missing required fields</div></div>
+    <div class="stat-card"><div class="stat-label">Chunk-ready</div><div class="stat-value" style="color:#1D9E75">98%</div><div class="stat-sub">105/107 docs pass all checks</div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">Document Previews — one sample per source type</div>
+  <div class="sec-sub">
+    Shows exactly what each loader produces: content, metadata keys, word count,
+    image detection, and — when strategy is ocr/caption — the injected image text.
+  </div>
+  <div class="preview-grid"><div class="pcard"><div class="pcard-hdr" style="background:#185FA518"><span class="pcard-badge" style="background:#185FA520;color:#185FA5">code</span><span class="pcard-name">logging___init__.py</span><span style="font-size:11px;color:#888780;font-family:monospace">b8bdd98e7e9b8cc7</span></div><div class="pcard-meta"><span class="pcard-pill">9,436 words</span></div><div class="pcard-content"># Copyright 2001-2022 by Vinay Sajip. All Rights Reserved.
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for any purpose and without fee is hereby granted,
+# provided that the above copyright notice appear in all copies and that
+# both that copyright notice and this permission notice appear in
+# supporting documentation, and that the name of Vinay Sajip
+</div><div class="pcard-meta-keys">metadata keys: source, source_type, file_type, ingested_at, file_name, file_size_bytes</div></div><div class="pcard"><div class="pcard-hdr" style="background:#993C1D18"><span class="pcard-badge" style="background:#993C1D20;color:#993C1D">csv</span><span class="pcard-name">product_catalog.csv</span><span style="font-size:11px;color:#888780;font-family:monospace">792513d3160bd95a</span></div><div class="pcard-meta"><span class="pcard-pill">26 words</span></div><div class="pcard-content">name: Neural Embedder Pro
+category: Software
+description: Enterprise-grade embedding API supporting 50+ languages. Outputs 1536-dim vectors. Latency &lt;50ms p99. Supports batch and streaming modes.
+tags: nlp,ml,api</div><div class="pcard-meta-keys">metadata keys: source, source_type, file_type, ingested_at, row_index, id, category, price_usd, in_stock, rating</div></div><div class="pcard"><div class="pcard-hdr" style="background:#BA751718"><span class="pcard-badge" style="background:#BA751720;color:#BA7517">json_faq</span><span class="pcard-name">faq_corpus.json</span><span style="font-size:11px;color:#888780;font-family:monospace">faq_b001</span></div><div class="pcard-meta"><span class="pcard-pill">27 words</span></div><div class="pcard-content">Question: How do I upgrade my subscription plan?
+Answer: Go to Settings → Billing → Change Plan. Changes take effect immediately. You are charged the prorated difference.</div><div class="pcard-meta-keys">metadata keys: source, source_type, file_type, ingested_at, faq_id, category, tags, external_id</div></div><div class="pcard"><div class="pcard-hdr" style="background:#1D9E7518"><span class="pcard-badge" style="background:#1D9E7520;color:#1D9E75">markdown</span><span class="pcard-name">qdrant_readme.md</span><span style="font-size:11px;color:#888780;font-family:monospace">023b1e330c18037f</span></div><div class="pcard-meta"><span class="pcard-pill">1,138 words</span></div><div class="pcard-content">&lt;p align="center">
+  &lt;picture>
+      &lt;source media="(prefers-color-scheme: dark)" srcset="https://github.com/qdrant/qdrant/raw/master/docs/logo-dark.svg">
+      &lt;source media="(prefers-color-scheme: light)" srcset="https://github.com/qdrant/qdrant/raw/master/docs/logo-light.svg">
+      &lt;img height="100" alt="Qdrant" src="https://github.com/qdrant/qdrant/raw/master/docs/logo.svg">
+  &lt;/picture>
+&lt;/p></div><div class="pcard-meta-keys">metadata keys: source, source_type, file_type, ingested_at, file_name, file_size_bytes</div></div><div class="pcard"><div class="pcard-hdr" style="background:#534AB718"><span class="pcard-badge" style="background:#534AB720;color:#534AB7">pdf</span><span class="pcard-name">rag_original_paper.pdf</span><span style="font-size:11px;color:#888780;font-family:monospace">f22af8b5487818e1</span></div><div class="pcard-meta"><span class="pcard-pill">418 words</span></div><div class="pcard-content"># **Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks** 
+
+**Patrick Lewis** _[†‡]_ **, Ethan Perez** _[⋆]_ **,** 
+
+**Aleksandra Piktus** _[†]_ **, Fabio Petroni** _[†]_ **, Vladimir Karpukhin** _[†]_ **, Naman Goyal** _[†]_ **, Heinrich Küttler** _[†]_ **,** 
+
+**Mike Lewis** _[†]_ **, Wen-tau Yih** _[†]_ **, Tim Rocktäschel** _[†‡]_ **, Sebastian Riedel** _[†‡]_ **, Douwe Kiela** _[</div><div class="pcard-meta-keys">metadata keys: source, source_type, file_type, ingested_at, file_name, page_number, total_pages, has_tables, has_images, image_count, image_strategy</div></div><div class="pcard"><div class="pcard-hdr" style="background:#99355618"><span class="pcard-badge" style="background:#99355620;color:#993556">web</span><span class="pcard-name">prompt_engineering.html</span><span style="font-size:11px;color:#888780;font-family:monospace">eb675be822d1e3cb</span></div><div class="pcard-meta"><span class="pcard-pill">212 words</span></div><div class="pcard-content">Prompt Engineering
+Prompt Engineering
+Prompt engineering is the practice of designing and refining input prompts to
+large language models to elicit desired outputs. It has become a critical skill
+for building reliable AI-powered applications.
+
+Key prompting techniques:
+- Zero-shot prompting: Ask the model directly without examples. Effective for
+  well-understood tasks where the model has strong p</div><div class="pcard-meta-keys">metadata keys: source, source_type, file_type, ingested_at, file_name, title, raw_char_count, stripped_char_count, boilerplate_removed_pct</div></div></div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">1 · Source Type Breakdown</div>
+  <div class="sec-sub">Imbalances here cause retrieval bias — overrepresented sources dominate top-k results.</div>
+  <table>
+    <thead><tr><th>Source</th><th>Docs</th><th>Avg words</th>
+    <th>Total tokens</th><th>Load time</th></tr></thead>
+    <tbody><tr><td><span class='badge' style='background:#185FA520;color:#185FA5'>code</span></td><td>8</td><td>4,221</td><td>75,369</td><td>0.00s</td></tr><tr><td><span class='badge' style='background:#993C1D20;color:#993C1D'>csv</span></td><td>11</td><td>23</td><td>545</td><td>0.00s</td></tr><tr><td><span class='badge' style='background:#BA751720;color:#BA7517'>json_faq</span></td><td>22</td><td>28</td><td>1,006</td><td>0.00s</td></tr><tr><td><span class='badge' style='background:#1D9E7520;color:#1D9E75'>markdown</span></td><td>5</td><td>761</td><td>10,279</td><td>0.00s</td></tr><tr><td><span class='badge' style='background:#534AB720;color:#534AB7'>pdf</span></td><td>56</td><td>510</td><td>51,120</td><td>7.37s</td></tr><tr><td><span class='badge' style='background:#99355620;color:#993556'>web</span></td><td>5</td><td>198</td><td>1,763</td><td>0.04s</td></tr></tbody>
+  </table>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+    <div class="chart"><div class="chart-title">Documents per source type</div><div class="bar-row"><div class="bar-label">pdf</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#534AB7"></div></div><div class="bar-val">56</div></div><div class="bar-row"><div class="bar-label">json_faq</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:#534AB7"></div></div><div class="bar-val">22</div></div><div class="bar-row"><div class="bar-label">csv</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#534AB7"></div></div><div class="bar-val">11</div></div><div class="bar-row"><div class="bar-label">code</div><div class="bar-track"><div class="bar-fill" style="width:14%;background:#534AB7"></div></div><div class="bar-val">8</div></div><div class="bar-row"><div class="bar-label">markdown</div><div class="bar-track"><div class="bar-fill" style="width:9%;background:#534AB7"></div></div><div class="bar-val">5</div></div><div class="bar-row"><div class="bar-label">web</div><div class="bar-track"><div class="bar-fill" style="width:9%;background:#534AB7"></div></div><div class="bar-val">5</div></div></div><div class="chart"><div class="chart-title">Avg words per doc by source</div><div class="bar-row"><div class="bar-label">code</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#185FA5"></div></div><div class="bar-val">4,221</div></div><div class="bar-row"><div class="bar-label">markdown</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#185FA5"></div></div><div class="bar-val">761</div></div><div class="bar-row"><div class="bar-label">pdf</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:#185FA5"></div></div><div class="bar-val">510</div></div><div class="bar-row"><div class="bar-label">web</div><div class="bar-track"><div class="bar-fill" style="width:5%;background:#185FA5"></div></div><div class="bar-val">198</div></div><div class="bar-row"><div class="bar-label">json_faq</div><div class="bar-track"><div class="bar-fill" style="width:1%;background:#185FA5"></div></div><div class="bar-val">28</div></div><div class="bar-row"><div class="bar-label">csv</div><div class="bar-track"><div class="bar-fill" style="width:1%;background:#185FA5"></div></div><div class="bar-val">23</div></div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">2 · Token Budget & Embedding Cost</div>
+  <div class="sec-sub">Use this before choosing an embedding model tier or vector DB plan.</div>
+  <div class="chart"><div class="chart-title">Tokens per source type</div><div class="bar-row"><div class="bar-label">code</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#1D9E75"></div></div><div class="bar-val">75,369</div></div><div class="bar-row"><div class="bar-label">pdf</div><div class="bar-track"><div class="bar-fill" style="width:68%;background:#1D9E75"></div></div><div class="bar-val">51,120</div></div><div class="bar-row"><div class="bar-label">markdown</div><div class="bar-track"><div class="bar-fill" style="width:14%;background:#1D9E75"></div></div><div class="bar-val">10,279</div></div><div class="bar-row"><div class="bar-label">web</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:#1D9E75"></div></div><div class="bar-val">1,763</div></div><div class="bar-row"><div class="bar-label">json_faq</div><div class="bar-track"><div class="bar-fill" style="width:1%;background:#1D9E75"></div></div><div class="bar-val">1,006</div></div><div class="bar-row"><div class="bar-label">csv</div><div class="bar-track"><div class="bar-fill" style="width:1%;background:#1D9E75"></div></div><div class="bar-val">545</div></div></div>
+  <div class="stat-grid" style="margin-top:12px">
+    <div class="stat-card"><div class="stat-label">Total tokens</div><div class="stat-value" style="color:#1D9E75">140,082</div></div>
+    <div class="stat-card"><div class="stat-label">Chunks @ 512t</div><div class="stat-value" style="color:#1D9E75">274</div><div class="stat-sub">vectors in index</div></div>
+    <div class="stat-card"><div class="stat-label">embed-3-small cost</div><div class="stat-value" style="color:#BA7517">~$0.0182</div><div class="stat-sub">$0.13/1M tokens</div></div>
+    <div class="stat-card"><div class="stat-label">embed-3-large cost</div><div class="stat-value" style="color:#993C1D">~$0.1821</div><div class="stat-sub">$1.30/1M tokens</div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">3 · PDF Image Handling</div>
+  <div class="sec-sub">
+    Images are extracted via <code>fitz</code> (PyMuPDF). Strategy controls what
+    happens to them: <code>none</code> → flagged only,
+    <code>ocr</code> → Tesseract text appended,
+    <code>caption</code> → Claude vision description appended.
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">PDF pages parsed</div><div class="stat-value" style="color:#1D9E75">56</div></div>
+    <div class="stat-card"><div class="stat-label">Pages with images</div><div class="stat-value" style="color:#888780">0</div><div class="stat-sub">detected by fitz</div></div>
+    <div class="stat-card"><div class="stat-label">Active strategy</div><div class="stat-value" style="color:#888780">none</div><div class="stat-sub">none | ocr | caption</div></div>
+    <div class="stat-card"><div class="stat-label">OCR injections</div><div class="stat-value" style="color:#1D9E75">0</div><div class="stat-sub">[Image text]: blocks added</div></div>
+    <div class="stat-card"><div class="stat-label">Caption injections</div><div class="stat-value" style="color:#1D9E75">0</div><div class="stat-sub">[Figure]: blocks added</div></div>
+  </div>
+  
+  <div class="insight">
+    💡 <strong>How to switch strategy:</strong> Change <code>PDF_IMAGE_STRATEGY</code>
+    at the top of <code>analyze_ingestion.py</code>, or pass
+    <code>pdf_image_strategy="ocr"</code> / <code>"caption"</code> to
+    <code>DirectoryLoader</code> in production. The preview cards above show
+    exactly what gets injected into each document's content when a strategy is active.
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">4 · Loader Performance</div>
+  <div class="sec-sub">PDF is CPU-bound — always uses <code>asyncio.to_thread()</code>. Web bottlenecks on network.</div>
+  <div class="chart"><div class="chart-title">Loader time (ms)</div><div class="bar-row"><div class="bar-label">pdf</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#BA7517"></div></div><div class="bar-val">7,370</div></div><div class="bar-row"><div class="bar-label">web</div><div class="bar-track"><div class="bar-fill" style="width:1%;background:#BA7517"></div></div><div class="bar-val">40</div></div><div class="bar-row"><div class="bar-label">markdown</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:#BA7517"></div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-label">code</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:#BA7517"></div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-label">json_faq</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:#BA7517"></div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-label">csv</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:#BA7517"></div></div><div class="bar-val">0</div></div></div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">5 · Short Document Audit</div>
+  <div class="sec-sub">Under 20 words — likely extraction failures. Produce near-random embeddings.</div>
+  <p class="sec-note">Short docs (< 20 words) — likely extraction failures — 2 issue(s)</p><table><thead><tr><th>Doc ID</th><th>Source</th><th>Words</th><th>Preview</th></tr></thead><tbody><tr><td>faq_e001</td><td>json_faq</td><td>9</td><td>Question: What? Answer: Please ask a more specific question.</td></tr><tr><td>7ae68a4599b1fdcf</td><td>csv</td><td>18</td><td>name: Query Transformer category: Library description: HyDE, multi-query, step-b</td></tr></tbody></table>
+</div>
+
+<div class="sec">
+  <div class="sec-title">6 · Long Document Audit</div>
+  <div class="sec-sub">Over 2,000 words — Stage 2 chunker must split these. Ensure structure-aware splitting.</div>
+  <p class="sec-note">Long docs (> 2,000 words) — will be split by chunker — 5 issue(s)</p><table><thead><tr><th>Doc ID</th><th>Source</th><th>Words</th><th>File</th></tr></thead><tbody><tr><td>b8bdd98e7e9b8cc7</td><td>code</td><td>9436</td><td>logging___init__.py</td></tr><tr><td>384c1870e23e14bb</td><td>code</td><td>5659</td><td>urllib_parse.py</td></tr><tr><td>5fa379dd53560099</td><td>code</td><td>2213</td><td>textwrap.py</td></tr><tr><td>e8c0c478b7bf2a57</td><td>code</td><td>4728</td><td>functools.py</td></tr><tr><td>a493f58aae768169</td><td>code</td><td>8301</td><td>dataclasses.py</td></tr></tbody></table>
+</div>
+
+<div class="sec">
+  <div class="sec-title">7 · Deduplication</div>
+  <div class="sec-sub">Duplicates waste embedding compute and bias retrieval. Pipeline uses sha256 doc_ids.</div>
+  <div class="ok-block">✓ No duplicate doc_ids detected</div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">8 · Metadata Completeness</div>
+  <div class="sec-sub">Required: <code>source</code>, <code>source_type</code>, <code>file_type</code>, <code>ingested_at</code>.</div>
+  <div class="ok-block">✓ All documents have complete required metadata</div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">9 · Source-specific Insights  <span style="font-size:12px;font-weight:400;color:#888780">(derived from content at analysis time, not baked into loaders)</span></div>
+  <div class="sec-sub">Signals computed from doc.content inside run_analysis() — no extra metadata stored by loaders.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div class="stat-card">
+      <div class="stat-label">Markdown</div>
+      <div style="font-size:12px;color:#2c2c2a;margin-top:6px;line-height:2">
+        5 files<br>
+        73 headings<br>
+        23 code blocks
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Code (Python)</div>
+      <div style="font-size:12px;color:#2c2c2a;margin-top:6px;line-height:2">
+        8 files<br>
+        172 functions<br>
+        0% files have no docstrings
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Web (HTML)</div>
+      <div style="font-size:12px;color:#2c2c2a;margin-top:6px;line-height:2">
+        5 pages<br>
+        avg 6.6% boilerplate removed
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">10 · Chunk Readiness</div>
+  <div class="sec-sub">words ≥ 20 + complete metadata + non-ASCII &lt; 5% + not a duplicate.</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Ready for Stage 2</div><div class="stat-value" style="color:#1D9E75">105</div><div class="stat-sub">98% of corpus</div></div>
+    <div class="stat-card"><div class="stat-label">Needs attention</div><div class="stat-value" style="color:#E24B4A">2</div><div class="stat-sub">fails ≥ 1 check</div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">Actionable Findings for Stage 2</div>
+  <div class="sec-sub">Fix these before moving to Document Preprocessing.</div>
+  <ul class="findings"><li>🔴 <strong>2 short doc(s)</strong> — extraction failures. Add <code>min_word_count=20</code> guard in Stage 2.</li><li>🟡 <strong>5 long doc(s)</strong> > 2,000 words. Use recursive chunker with <code>chunk_size=512, chunk_overlap=50</code>.</li></ul>
+</div>
+
+</div></body></html>

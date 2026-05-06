@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><title>Transformer Architecture</title>
+<meta name="source-url" content="https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)">
+</head><body>
+<nav>Wikipedia navigation | Search | Random article</nav>
+<h1>Transformer Architecture</h1>
+<div id="content">The Transformer is a deep learning architecture introduced in the 2017 paper
+'Attention Is All You Need' by Vaswani et al. It became the foundation of
+nearly all modern large language models.
+
+The central innovation is the self-attention mechanism, which allows the model
+to weigh the relevance of different positions in an input sequence when computing
+a representation for each position. Unlike recurrent neural networks (RNNs),
+Transformers process all tokens in parallel, making them far more efficient to
+train on modern GPU hardware.
+
+Architecture components:
+- Token embeddings: Maps each input token to a dense vector.
+- Positional encoding: Injects sequence position information (the model has no
+  inherent sense of order without this).
+- Multi-head self-attention: Runs several attention operations in parallel,
+  each attending to different aspects of the input.
+- Feed-forward network: A two-layer MLP applied independently to each position.
+- Layer normalization: Stabilizes training and enables deeper networks.
+
+The encoder-decoder structure from the original paper gave rise to BERT-style
+encoders (bidirectional, used for embeddings) and GPT-style decoders (autoregressive,
+used for generation).
+
+Modern LLMs such as GPT-4, Claude, Gemini, and Llama are all decoder-only
+Transformers scaled to hundreds of billions of parameters.</div>
+<footer>Wikipedia | CC BY-SA | Privacy Policy | Contact</footer>
+</body></html>

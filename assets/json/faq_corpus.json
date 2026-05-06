@@ -1,0 +1,244 @@
+{
+  "faqs": [
+    {
+      "id": "b001",
+      "category": "billing",
+      "question": "How do I upgrade my subscription plan?",
+      "answer": "Go to Settings \u2192 Billing \u2192 Change Plan. Changes take effect immediately. You are charged the prorated difference.",
+      "tags": [
+        "billing",
+        "upgrade",
+        "plan"
+      ]
+    },
+    {
+      "id": "b002",
+      "category": "billing",
+      "question": "Can I get a refund if I cancel mid-cycle?",
+      "answer": "We offer a 7-day money-back guarantee for new subscriptions. After 7 days, cancellations are prorated to the end of the billing cycle.",
+      "tags": [
+        "billing",
+        "refund",
+        "cancel"
+      ]
+    },
+    {
+      "id": "b003",
+      "category": "billing",
+      "question": "What payment methods do you accept?",
+      "answer": "We accept Visa, Mastercard, American Express, and PayPal. Bank transfers are available for annual enterprise plans over $5,000.",
+      "tags": [
+        "billing",
+        "payment"
+      ]
+    },
+    {
+      "id": "b004",
+      "category": "billing",
+      "question": "How do I download my invoice?",
+      "answer": "Invoices are available under Settings \u2192 Billing \u2192 Invoice History. Click any invoice to download the PDF.",
+      "tags": [
+        "billing",
+        "invoice"
+      ]
+    },
+    {
+      "id": "b005",
+      "category": "billing",
+      "question": "Does the free plan have usage limits?",
+      "answer": "Free plan includes 100 API calls/day, 1GB storage, and up to 3 projects. Limits reset at midnight UTC.",
+      "tags": [
+        "billing",
+        "free",
+        "limits"
+      ]
+    },
+    {
+      "id": "t001",
+      "category": "technical",
+      "question": "What is the rate limit on the API?",
+      "answer": "Rate limits depend on plan: Free=10 req/min, Pro=100 req/min, Enterprise=1000 req/min. Exceeding the limit returns a 429 status. Use exponential backoff.",
+      "tags": [
+        "api",
+        "rate-limit",
+        "technical"
+      ]
+    },
+    {
+      "id": "t002",
+      "category": "technical",
+      "question": "How do I authenticate API requests?",
+      "answer": "Pass your API key in the Authorization header: 'Authorization: Bearer YOUR_API_KEY'. Never include your key in query strings.",
+      "tags": [
+        "api",
+        "auth",
+        "security"
+      ]
+    },
+    {
+      "id": "t003",
+      "category": "technical",
+      "question": "Which SDKs do you officially support?",
+      "answer": "Official SDKs: Python (pip install yourlib), Node.js (npm install yourlib), Go (go get github.com/yourlib). Community SDKs exist for Ruby and Java.",
+      "tags": [
+        "api",
+        "sdk",
+        "technical"
+      ]
+    },
+    {
+      "id": "t004",
+      "category": "technical",
+      "question": "How do I handle pagination in list endpoints?",
+      "answer": "All list endpoints return a 'next_cursor' field. Pass it as the 'cursor' query parameter on your next request. An absent cursor means you have reached the last page.",
+      "tags": [
+        "api",
+        "pagination",
+        "technical"
+      ]
+    },
+    {
+      "id": "t005",
+      "category": "technical",
+      "question": "What does error code 422 mean?",
+      "answer": "HTTP 422 means Unprocessable Entity \u2014 your request was valid JSON but failed validation. Check the 'errors' field in the response body for field-level details.",
+      "tags": [
+        "api",
+        "errors",
+        "technical"
+      ]
+    },
+    {
+      "id": "a001",
+      "category": "account",
+      "question": "How do I reset my password?",
+      "answer": "Click 'Forgot password' on the login page. Enter your email and we will send a reset link valid for 1 hour. Check your spam folder if it doesn't arrive.",
+      "tags": [
+        "account",
+        "password"
+      ]
+    },
+    {
+      "id": "a002",
+      "category": "account",
+      "question": "Can I change my email address?",
+      "answer": "Go to Settings \u2192 Profile \u2192 Email. Enter your new email and confirm with your password. A verification email is sent to the new address.",
+      "tags": [
+        "account",
+        "email",
+        "profile"
+      ]
+    },
+    {
+      "id": "a003",
+      "category": "account",
+      "question": "How do I enable two-factor authentication?",
+      "answer": "Settings \u2192 Security \u2192 Two-Factor Authentication \u2192 Enable. We support TOTP apps (Authy, Google Authenticator) and SMS backup codes.",
+      "tags": [
+        "account",
+        "security",
+        "2fa"
+      ]
+    },
+    {
+      "id": "a004",
+      "category": "account",
+      "question": "How do I delete my account?",
+      "answer": "Account deletion is permanent. Go to Settings \u2192 Account \u2192 Delete Account. All data is removed within 30 days per our data retention policy.",
+      "tags": [
+        "account",
+        "delete",
+        "privacy"
+      ]
+    },
+    {
+      "id": "a005",
+      "category": "account",
+      "question": "Can I transfer my account to another person?",
+      "answer": "Account transfers are not self-service. Contact support with both users' emails and we will process the transfer within 2 business days.",
+      "tags": [
+        "account",
+        "transfer"
+      ]
+    },
+    {
+      "id": "f001",
+      "category": "features",
+      "question": "Does the product support real-time collaboration?",
+      "answer": "Yes. Multiple users can edit the same project simultaneously. Changes are synced via WebSockets with a maximum latency of 200ms. Conflict resolution uses operational transforms.",
+      "tags": [
+        "features",
+        "collaboration",
+        "realtime"
+      ]
+    },
+    {
+      "id": "f002",
+      "category": "features",
+      "question": "What export formats are supported?",
+      "answer": "Export to: PDF, CSV, JSON, XLSX, Markdown. Exports are processed asynchronously. Large exports (>10k rows) are emailed as a download link.",
+      "tags": [
+        "features",
+        "export"
+      ]
+    },
+    {
+      "id": "f003",
+      "category": "features",
+      "question": "Is there a mobile app?",
+      "answer": "iOS and Android apps are available. The mobile app supports view and comment actions. Creating and editing projects requires the web app.",
+      "tags": [
+        "features",
+        "mobile"
+      ]
+    },
+    {
+      "id": "f004",
+      "category": "features",
+      "question": "What integrations are available?",
+      "answer": "Native integrations: Slack, GitHub, Jira, Notion, Zapier, Make. REST webhooks available on Pro plan and above for custom integrations.",
+      "tags": [
+        "features",
+        "integrations"
+      ]
+    },
+    {
+      "id": "f005",
+      "category": "features",
+      "question": "Does the product support SSO/SAML?",
+      "answer": "SAML 2.0 SSO is available on the Enterprise plan. We support Okta, Azure AD, Google Workspace, and any SAML 2.0 compliant identity provider.",
+      "tags": [
+        "features",
+        "sso",
+        "enterprise",
+        "security"
+      ]
+    },
+    {
+      "id": "e001",
+      "category": "billing",
+      "question": "What?",
+      "answer": "Please ask a more specific question.",
+      "tags": []
+    },
+    {
+      "id": "e002",
+      "category": "technical",
+      "question": "How do I upgrade my subscription plan?",
+      "answer": "Go to Settings \u2192 Billing \u2192 Change Plan. Changes take effect immediately. You are charged the prorated difference.",
+      "tags": [
+        "billing",
+        "upgrade"
+      ]
+    },
+    {
+      "id": "e003",
+      "category": "technical",
+      "question": "API authentication",
+      "answer": null,
+      "tags": []
+    }
+  ],
+  "total": 23,
+  "version": "1.0"
+}
